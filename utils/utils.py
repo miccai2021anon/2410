@@ -226,6 +226,7 @@ def nll_loss(hazards, S, Y, c, alpha=0.4, eps=1e-7):
     # after padding, S(0) = S[1], S(1) = S[2], etc, h(0) = h[0]
     #h[y] = h(1)
     #S[1] = S(1)
+    Y = torch.as_tensor(Y,dtype=torch.int64)
     uncensored_loss = -(1 - c) * (torch.log(torch.gather(S_padded, 1, Y).clamp(min=eps)) + torch.log(torch.gather(hazards, 1, Y).clamp(min=eps)))
     censored_loss = - c * torch.log(torch.gather(S_padded, 1, Y+1).clamp(min=eps))
     neg_l = censored_loss + uncensored_loss
